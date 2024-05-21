@@ -1,0 +1,13 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: dvwa-auto
+  namespace: dvwa-group02-web
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: dvwa-grupo02
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 50

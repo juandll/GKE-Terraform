@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+
+
+###
+### Deployment Metadata
+###
+metadata:
+  name: dvwa-grupo02
+  namespace: dvwa-group02-web
+
+###
+### Specs
+###
+spec: 
+  
+  selector:
+    matchLabels:
+      app: dvwa-grupo02
+      tier: frontend
+
+  template:
+
+    # Template Metadata to be used by service for discovery
+    metadata:
+      labels:
+        app: dvwa-grupo02
+        tier: frontend
+
+    # Container/Volume definition
+    spec:
+      serviceAccountName: sa-web
+      containers:
+        - name: dvwa
+          image: ghcr.io/digininja/dvwa:latest
+          imagePullPolicy: Always  # Set image pull policy to Always
+          ports:
+            - containerPort: 80
+          env:
+            - name: DB_SERVER
+              value: "dvwa-mysql-service.dvwa-group02-mysql.svc.cluster.local"
+          resources:
+            requests:
+              cpu: "250m"
+
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              add:
+                - NET_BIND_SERVICE
+              drop:
+                - ALL
+          volumeMounts:  # Add volumeMounts for shared storage
+            - name: dvwa-storage
+              mountPath: /var/www/dvwa
+      volumes:  # Define a PersistentVolumeClaim
+        - name: dvwa-storage
+          persistentVolumeClaim:
+            claimName: dvwa-pvc
+#### scale: kubectl autoscale deployment dvwa-grupo02 -n dvwa-group02-web --min=1 --max=5 --cpu-percent=70
+

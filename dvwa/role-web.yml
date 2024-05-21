@@ -1,0 +1,10 @@
+# Role definition for role-web
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: dvwa-group02-web
+  name: role-web
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list"]

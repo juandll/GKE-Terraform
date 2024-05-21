@@ -1,0 +1,10 @@
+# Role definition for role-mysql
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: dvwa-group02-mysql
+  name: role-mysql
+rules:
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "list"]
